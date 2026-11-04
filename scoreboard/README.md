@@ -5,13 +5,15 @@ The screen behind you on camera: a lamp match board, Kushaagra in green against 
 ## Use it
 Run `./serve.sh`, open http://localhost:4827 in Chrome, and put the window in full screen. For another port, run `./serve.sh 5000`.
 
+The layout follows the screen shape. A wide screen puts the two corners side by side. A tall screen stacks them, with the opponent below, and the record runs in two rows. To use a monitor upright, turn it in System Settings, Displays, Rotation.
+
 ## Change the score
 Edit [score.json](score.json) and save it. Reload the page to load it.
 
 | Field | What it does |
 |---|---|
 | `player` | Your name, on the green side |
-| `opponent` | The name on the red side, for example Reality, The Receipts, Hindsight, The Homework, The Facts, Past Me or The Internet |
+| `opponent` | The name on the red side. Locked as The Sources |
 | `guesses` | One letter per guess, oldest first: `r` when the guess held, `w` when it failed. `rrw` is 2–1 |
 | `dim` | Screen dimming, from `0` (none) to `0.7` (darkest) |
 

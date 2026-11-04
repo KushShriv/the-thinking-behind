@@ -105,11 +105,16 @@ function fit() {
   const { player, opponent } = score()
   const a = cols(pad(player))
   const b = cols(pad(opponent))
-  // Across: both lamp boxes, their frames and the vs gap. Down: name, box, rail.
-  const unit = Math.floor(Math.min((innerWidth * 0.92) / (a + b + 10.5), (innerHeight * 0.92) / 17.6))
+  // Same test as the orientation media query in styles.css.
+  const tall = innerHeight >= innerWidth
+  // Wide: both boxes side by side, so across is both boxes and the vs gap, down is name, box, rail.
+  // Tall: boxes stacked, so across is the wider box, down is both corners, the vs gap and the rail.
+  const across = tall ? Math.max(a, b) + 3.8 : a + b + 10.5
+  const down = tall ? 33.6 : 17.6
+  const unit = Math.floor(Math.min((innerWidth * 0.92) / across, (innerHeight * 0.92) / down))
   stage.style.setProperty('--u', `${unit}px`)
-  // The seam follows the VS badge when one score has more digits than the other.
-  stage.style.setProperty('--split', `calc(50% + ${(a - b) / 2} * var(--u))`)
+  // The seam follows the VS badge: sideways when digit counts differ, or up past the rail when tall.
+  stage.style.setProperty('--split', `calc(50% + ${tall ? -1.37 : (a - b) / 2} * var(--u))`)
   fitNames(unit)
 }
 

@@ -100,13 +100,13 @@ body { background: #0b0d0e; overflow: hidden; }
   height: calc(var(--u) * 2.6);
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   font-family: "Bungee Inline", Bungee, Impact, sans-serif;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
   text-shadow: .035em .035em 0 #000, .07em .07em 0 rgba(0, 0, 0, .55);
 }
-.corner.opponent .name { justify-content: flex-end; }
 
 /* The lamp box. */
 .box {
@@ -250,6 +250,36 @@ body { background: #0b0d0e; overflow: hidden; }
   height: 1px;
   overflow: hidden;
   clip-path: inset(50%);
+}
+
+/* Tall screens: the corners stack, so the two scores face each other across the seam. */
+@media (orientation: portrait) {
+  .field.player { background: radial-gradient(120% 90% at 18% 10%, #17694c, var(--green-field) 55%, #072a1e); }
+  .field.opponent { background: radial-gradient(120% 90% at 82% 90%, #96272a, var(--red-field) 55%, #3c0c0e); }
+  .field.player, .flash.player {
+    clip-path: polygon(0 0, 100% 0, 100% calc(var(--split) - 4%), 0 calc(var(--split) + 4%));
+  }
+  .field.opponent, .flash.opponent {
+    clip-path: polygon(0 calc(var(--split) + 4%), 100% calc(var(--split) - 4%), 100% 100%, 0 100%);
+  }
+  .field::after { background-size: cover; }
+  .seam {
+    clip-path: polygon(0 calc(var(--split) + 3.6%), 100% calc(var(--split) - 4.4%), 100% calc(var(--split) - 3.6%), 0 calc(var(--split) + 4.4%));
+  }
+
+  .match { flex-direction: column; }
+  .gap { width: auto; height: calc(var(--u) * 3.5); }
+  .vs { top: 50%; }
+  .box { justify-self: center; }
+  .corner.opponent .name { order: 1; align-items: flex-start; }
+
+  /* Forty lamps do not fit across one box, so the record runs in two rows, oldest first. */
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(20, calc(var(--u) * .46));
+    justify-content: space-between;
+    row-gap: calc(var(--u) * .24);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
