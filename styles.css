@@ -140,7 +140,6 @@ body[data-mode='arcade'] .table::before { display: none; }
 .pick.classic .mode-title { font-family: var(--book); }
 .pick.arcade .mode-title { font-family: var(--game); font-size: clamp(22px, 3.8vmin, 34px); }
 .pick-line { max-width: 30ch; min-height: 2.7em; }
-.pick-meta { display: flex; gap: .6em; align-items: center; font-weight: 600; }
 
 .mode-object { position: relative; display: block; width: clamp(170px, 27vw, 330px); height: clamp(150px, 29vh, 260px); }
 .book {
@@ -728,9 +727,11 @@ body[data-mode='arcade'] .floor-head .act { background: #2a2140; box-shadow: 0 3
 ::view-transition-old(journal), ::view-transition-new(journal) { animation-duration: 300ms; }
 
 @media (max-width: 760px), (max-aspect-ratio: 4/5) {
-  .home { overflow-y: auto; }
-  .decks { gap: 18px; align-items: start; }
-  .mode-object { width: min(40vw, 230px); height: 170px; }
+  .home { overflow-y: auto; grid-template-rows: auto auto; align-content: start; gap: 28px; }
+  .decks { flex-direction: column; align-items: center; gap: 32px; padding-bottom: 16px; }
+  .pick { width: 100%; max-width: 360px; grid-template-rows: auto auto auto; gap: 8px; }
+  .pick-line { min-height: 0; }
+  .mode-object { width: min(65vw, 250px); height: 180px; }
   body[data-mode='classic'] .deck { height: auto; width: min(62vw, 300px); }
   body[data-mode='classic'] .sheet { overflow-y: auto; grid-template-rows: none; grid-auto-rows: max-content; align-content: start; perspective: none; }
   body[data-mode='classic'] .spread { height: auto; aspect-ratio: auto; width: 100%; grid-template-columns: minmax(0, 1fr); grid-auto-rows: max-content; }

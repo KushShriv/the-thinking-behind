@@ -132,7 +132,6 @@ Separate information available at the time from later outcomes and explanations.
 
   const run = () => state[state.mode];
   const list = () => lists[state.mode];
-  const leftIn = (mode) => lists[mode].filter((_, i) => !(i in state[mode].spent) && state[mode].current?.index !== i).length;
   const remaining = () => list().map((_, i) => i).filter((i) => !(i in run().spent) && run().current?.index !== i);
 
   // A fair pick: rejection sampling removes the bias of a plain modulo.
@@ -544,14 +543,7 @@ Separate information available at the time from later outcomes and explanations.
     ui.wall.hidden = !state.mode;
     ui.sheet.hidden = true;
     ui.wall.classList.remove('under');
-    if (!state.mode) {
-      for (const [mode, name] of [['classic', 'Classic'], ['arcade', 'Arcade']]) {
-        const left = leftIn(mode);
-        const unit = mode === 'classic' ? (left === 1 ? 'journal entry' : 'journal entries') : (left === 1 ? 'level' : 'levels');
-        $(`meta${name}`).textContent = `${left} ${unit}`;
-      }
-      return;
-    }
+    if (!state.mode) return;
     renderWall();
     // A reload returns to the open case, so a reload cannot give a new draw.
     if (run().current) showSheet();
