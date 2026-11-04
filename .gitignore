@@ -2,3 +2,10 @@
 sealed.js
 entries.json
 .DS_Store
+
+# Local development tools, Graphify output, and preview state.
+/.venv/
+/.run/
+/graphify-out/
+/.codex/
+/AGENTS.md

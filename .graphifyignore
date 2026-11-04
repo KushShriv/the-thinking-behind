@@ -1,0 +1,6 @@
+.venv/
+.run/
+.codex/
+graphify-out/
+sealed.js
+entries.json

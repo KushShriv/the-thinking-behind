@@ -76,3 +76,37 @@ Progress is saved per browser and site address. Progress from a local preview do
 
 ## License
 The code is licensed under the [MIT License](LICENSE). The bundled Bungee and Bungee Inline fonts remain under the [SIL Open Font License](scoreboard/fonts/OFL.txt).
+
+## Local setup (macOS and Linux)
+
+Install Python 3.10+ with pip and venv first. On macOS, Homebrew users can run
+`brew install python`. On Debian/Ubuntu, use `sudo apt install python3 python3-venv python3-pip`.
+Then run:
+
+```bash
+./setup.sh
+./start.sh
+./stop.sh
+```
+
+Setup installs Graphify (`graphifyy==0.9.92`) into `.venv`, registers its Codex
+integration in this repo, and builds the code graph. To use the bare `graphify`
+command in a terminal, first run `source .venv/bin/activate`. It does not use an LLM or
+require an API key. Run setup again to refresh the graph. The environment,
+Graphify output, generated Codex files and preview state are git-ignored.
+These tools are for development; GitHub Pages still serves the static site.
+
+Start prints the local demo URL and runs the preview in the background, bound to
+`127.0.0.1`. The default port is 8765; use `PORT=8766 ./start.sh` if it is busy.
+Logs are in `.run/preview.log`. Stop checks the saved process before stopping it;
+it does not stop a server started by another tool.
+
+Query the local graph without activating the environment:
+
+```bash
+.venv/bin/graphify query "showView"
+.venv/bin/graphify affected "showView"
+```
+
+Graphify installation reference: [official repository](https://github.com/Graphify-Labs/graphify)
+(checked 2026-11-05).
