@@ -3,7 +3,7 @@ name: Deploy The Thinking Behind to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'app.js', 'styles.css', 'scoreboard/**', '.github/workflows/deploy.yml']
+    paths: ['index.html', 'app.js', 'styles.css', 'LICENSE', 'scoreboard/**', '.github/workflows/deploy.yml']
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
       - name: Prepare public site
         run: |
           mkdir _site
-          cp index.html app.js styles.css _site/
+          cp index.html app.js styles.css LICENSE _site/
           cp -R scoreboard _site/scoreboard
           printf '%s\n' 'window.TTB_SEALED = {"classic":[],"arcade":[]};' > _site/sealed.js
           touch _site/.nojekyll

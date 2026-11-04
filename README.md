@@ -73,3 +73,6 @@ The `Deploy The Thinking Behind to GitHub Pages` workflow publishes the app at t
 The workflow creates an empty public `sealed.js`. Your local `sealed.js` and `entries.json` stay git-ignored and are never copied into the deployment. Use the home screen's demo link, or add `?demo` to the site URL, to play the placeholder entries. Real public entries need a separate reviewed content list. System fonts have fallbacks; Arcade's web fonts are included in the deployment.
 
 Progress is saved per browser and site address. Progress from a local preview does not transfer to the GitHub Pages address.
+
+## License
+The code is licensed under the [MIT License](LICENSE). The bundled Bungee and Bungee Inline fonts remain under the [SIL Open Font License](scoreboard/fonts/OFL.txt).
