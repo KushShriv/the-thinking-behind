@@ -1,0 +1,165 @@
+:root {
+  /* Match --wall to the filmed wall. Graphics use only these three colours. */
+  --wall: #a8cbe6;
+  --paper: #f6f8f7;
+  --ink: #101417;
+
+  --display: "Futura-CondensedExtraBold", "Futura Condensed ExtraBold", "Avenir Next Condensed", Impact, sans-serif;
+  --text: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --gutter: clamp(16px, 3vw, 44px);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--wall);
+  color: var(--ink);
+  font-family: var(--text);
+  overflow: hidden;
+}
+body.idle, body.idle * { cursor: none; }
+p, h1, ol { margin: 0; padding: 0; }
+
+/* The sealed list: one bar for each decision. */
+.wall {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--gutter);
+  padding: var(--gutter);
+}
+.bars {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), 1fr);
+  grid-template-rows: repeat(var(--rows, 1), minmax(0, 1fr));
+  grid-auto-flow: column;
+  gap: clamp(6px, 1.4vh, 16px) clamp(16px, 3vw, 44px);
+}
+.bar {
+  display: block;
+  width: var(--w, 100%);
+  max-height: 11vh;
+  background: var(--ink);
+}
+.bar.scan { background: var(--paper); }
+.bar.closed { background: none; box-shadow: inset 0 0 0 3px var(--ink); }
+.bar.rejected {
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 3px, transparent 3px 14px);
+}
+
+.empty {
+  grid-row: 1;
+  grid-column: 1;
+  align-self: center;
+  max-width: 18ch;
+  font-family: var(--display);
+  font-size: clamp(44px, 11vh, 120px);
+  line-height: 1.02;
+}
+
+.strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.count { font-size: clamp(17px, 3vh, 28px); font-weight: 600; }
+
+/* Buttons */
+.act {
+  display: inline-flex;
+  align-items: center;
+  gap: .6em;
+  min-height: 48px;
+  padding: .5em .9em;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 clamp(17px, 3vh, 28px) var(--text);
+  cursor: pointer;
+}
+.act.quiet { background: none; color: inherit; box-shadow: inset 0 0 0 3px currentColor; }
+.act[disabled] { display: none; }
+.act:focus-visible, a:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+.band.locked .act:focus-visible { outline-color: var(--paper); }
+kbd {
+  padding: .05em .4em;
+  border: 2px solid currentColor;
+  font: 600 .72em var(--text);
+}
+
+/* The opened file grows out of its bar. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(8px, 2vh, 20px);
+  padding: var(--gutter) var(--gutter) 0;
+  background: var(--paper);
+  clip-path: var(--from, inset(0));
+  transition: clip-path .55s cubic-bezier(.7, 0, .2, 1);
+}
+.sheet.full { clip-path: inset(0); }
+.sheet > * { opacity: 0; transition: opacity .2s; }
+.sheet.full > * { opacity: 1; transition: opacity .3s .4s; }
+.sheet.still, .sheet.still > *, .sheet.still.full > * { transition: none; }
+.sheet.with-sources { grid-template-rows: auto minmax(0, .8fr) minmax(0, 1fr) auto; }
+
+.thing { font-size: clamp(20px, 4.4vh, 44px); font-weight: 600; }
+.question-box { min-height: 0; display: flex; align-items: center; }
+.question {
+  max-width: 100%;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 1.12;
+  overflow-wrap: break-word;
+}
+
+.sources {
+  min-height: 0;
+  overflow: auto;
+  list-style: none;
+  display: grid;
+  align-content: start;
+  gap: .5em;
+  font-size: clamp(18px, 3.4vh, 32px);
+  font-weight: 600;
+}
+.sources a { color: var(--ink); text-underline-offset: .15em; }
+.sources span { display: block; font-size: .68em; font-weight: 500; }
+
+.band {
+  margin: 0 calc(var(--gutter) * -1);
+  padding: clamp(10px, 2vh, 20px) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--wall);
+}
+.band.locked { background: var(--ink); color: var(--paper); }
+.band.locked .act:not(.quiet) { background: var(--paper); color: var(--ink); }
+.status { font-size: clamp(17px, 3vh, 28px); font-weight: 600; }
+.acts { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.toast {
+  position: fixed;
+  top: var(--gutter);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: .5em .9em;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: clamp(16px, 2.6vh, 24px);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet > *, .sheet.full > * { transition: none; }
+}

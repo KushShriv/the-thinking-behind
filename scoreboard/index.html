@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scoreboard</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="field player"></div>
+      <div class="field opponent"></div>
+      <div class="seam"></div>
+      <div class="frame"></div>
+
+      <h1 class="sr" id="title"></h1>
+      <main class="board" aria-hidden="true">
+        <div class="match">
+          <section class="corner player">
+            <h2 class="name"></h2>
+            <div class="box"><div class="marquee"></div><div class="digits"></div></div>
+          </section>
+          <div class="gap"><div class="vs"><span>VS</span></div></div>
+          <section class="corner opponent">
+            <h2 class="name"></h2>
+            <div class="box"><div class="marquee"></div><div class="digits"></div></div>
+          </section>
+        </div>
+        <ol class="rail"></ol>
+      </main>
+
+      <p class="sr" id="live" aria-live="polite"></p>
+      <p class="note" hidden></p>
+      <div class="dim"></div>
+    </div>
+  </body>
+</html>

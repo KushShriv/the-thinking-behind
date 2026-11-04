@@ -1,0 +1,4 @@
+# The sealed list must never be deployed or pushed.
+sealed.js
+entries.json
+.DS_Store

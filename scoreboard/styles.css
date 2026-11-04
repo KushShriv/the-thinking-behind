@@ -1,0 +1,259 @@
+@font-face {
+  font-family: Bungee;
+  src: url("fonts/bungee-latin-400-normal.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bungee Inline";
+  src: url("fonts/bungee-inline-latin-400-normal.woff2") format("woff2");
+  font-display: swap;
+}
+
+:root {
+  --green-field: #0d4a35;
+  --red-field: #6d1a1c;
+  --green-lamp: #4dea8f;
+  --red-lamp: #ff5a48;
+  --paper: #f3efe2;
+  --box: #0b0d0e;
+  --lamp-off: #1b1f22;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: #0b0d0e; overflow: hidden; }
+
+.stage {
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--paper);
+  font-family: Bungee, Impact, sans-serif;
+}
+.stage.idle { cursor: none; }
+
+/* Two painted corners split by a slanted seam. */
+.field { position: absolute; inset: 0; }
+.field.player {
+  background: radial-gradient(90% 120% at 18% 10%, #17694c, var(--green-field) 55%, #072a1e);
+  clip-path: polygon(0 0, calc(var(--split) + 4%) 0, calc(var(--split) - 4%) 100%, 0 100%);
+}
+.field.opponent {
+  background: radial-gradient(90% 120% at 82% 10%, #96272a, var(--red-field) 55%, #3c0c0e);
+  clip-path: polygon(calc(var(--split) + 4%) 0, 100% 0, 100% 100%, calc(var(--split) - 4%) 100%);
+}
+.field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .22;
+  mix-blend-mode: soft-light;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .02' numOctaves='2' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.5 0 0 0 -.5'/%3E%3C/filter%3E%3Crect width='1600' height='900' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+.seam {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  clip-path: polygon(calc(var(--split) + 3.6%) 0, calc(var(--split) + 4.4%) 0, calc(var(--split) - 3.6%) 100%, calc(var(--split) - 4.4%) 100%);
+}
+
+.frame {
+  position: absolute;
+  inset: calc(var(--u) * .4);
+  border: calc(var(--u) * .07) solid rgba(243, 239, 226, .4);
+  pointer-events: none;
+}
+
+/* A point lights up the scorer's whole corner, once. */
+.flash { position: absolute; inset: 0; pointer-events: none; animation: flash 900ms ease-out both; }
+.flash.player {
+  background: var(--green-lamp);
+  clip-path: polygon(0 0, calc(var(--split) + 4%) 0, calc(var(--split) - 4%) 100%, 0 100%);
+}
+.flash.opponent {
+  background: var(--red-lamp);
+  clip-path: polygon(calc(var(--split) + 4%) 0, 100% 0, 100% 100%, calc(var(--split) - 4%) 100%);
+}
+@keyframes flash {
+  0% { opacity: 0; }
+  14% { opacity: .55; }
+  100% { opacity: 0; }
+}
+
+.board {
+  position: relative;
+  display: grid;
+  row-gap: calc(var(--u) * .9);
+}
+.match { display: flex; justify-content: space-between; }
+.gap { position: relative; flex: none; width: calc(var(--u) * 3.5); }
+.corner { display: grid; row-gap: calc(var(--u) * .6); }
+
+.name {
+  margin: 0;
+  width: 0;
+  min-width: 100%;
+  height: calc(var(--u) * 2.6);
+  display: flex;
+  align-items: flex-end;
+  font-family: "Bungee Inline", Bungee, Impact, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: .035em .035em 0 #000, .07em .07em 0 rgba(0, 0, 0, .55);
+}
+.corner.opponent .name { justify-content: flex-end; }
+
+/* The lamp box. */
+.box {
+  --lamp: var(--green-lamp);
+  position: relative;
+  width: calc(var(--u) * (var(--cols) + 3.2));
+  height: calc(var(--u) * 10.2);
+  background: var(--box);
+  border-radius: calc(var(--u) * .3);
+  box-shadow:
+    inset 0 0 calc(var(--u) * 1.2) #000,
+    0 0 0 calc(var(--u) * .1) rgba(243, 239, 226, .55),
+    calc(var(--u) * .22) calc(var(--u) * .3) 0 rgba(0, 0, 0, .55);
+}
+.corner.opponent .box { --lamp: var(--red-lamp); }
+
+.digits {
+  position: absolute;
+  left: calc(var(--u) * 1.6);
+  top: calc(var(--u) * 1.6);
+  display: flex;
+  gap: var(--u);
+}
+.digit {
+  display: grid;
+  grid-template-columns: repeat(5, var(--u));
+  grid-auto-rows: var(--u);
+}
+
+.lamp {
+  position: relative;
+  display: block;
+  margin: 8%;
+  border-radius: 50%;
+  background: var(--lamp-off);
+  box-shadow: inset 0 calc(var(--u) * .06) calc(var(--u) * .1) #000;
+}
+.lamp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle at 42% 38%, #fff 0 16%, var(--lamp) 58%);
+  box-shadow: 0 0 calc(var(--u) * .3) var(--lamp), 0 0 calc(var(--u) * .9) color-mix(in srgb, var(--lamp) 45%, transparent);
+  transition: opacity 90ms linear;
+}
+.lamp.on::after {
+  opacity: 1;
+  transition: opacity 140ms linear calc(var(--col) * 45ms + 120ms);
+}
+
+/* The marquee. */
+.marquee { position: absolute; inset: 0; }
+.marquee i {
+  position: absolute;
+  left: calc(var(--u) * (.24 + var(--x) * ((var(--cols) + 2.2) / (var(--cols) + 2))));
+  top: calc(var(--u) * (.24 + var(--y) * 1.215));
+  width: calc(var(--u) * .34);
+  height: calc(var(--u) * .34);
+  border-radius: 50%;
+  background: #fff6dc;
+  opacity: .62;
+  box-shadow: 0 0 calc(var(--u) * .28) rgba(255, 238, 190, .75);
+}
+.marquee.chase i { animation: chase 620ms linear calc(var(--i) * 14ms) 2 both; }
+@keyframes chase {
+  0%, 100% { opacity: .62; transform: scale(1); }
+  20% { opacity: 1; transform: scale(1.45); }
+  60% { opacity: .15; transform: scale(.9); }
+}
+
+/* The badge sits on the seam. */
+.vs {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  display: grid;
+  place-items: center;
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 5);
+  margin: calc(var(--u) * -2.5);
+  color: #14171a;
+  background: var(--paper);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 calc(var(--u) * .14) var(--paper),
+    inset 0 0 0 calc(var(--u) * .22) #14171a,
+    calc(var(--u) * .16) calc(var(--u) * .24) 0 rgba(0, 0, 0, .6);
+  font-size: calc(var(--u) * 2);
+  line-height: 1;
+  transform: rotate(-8deg);
+  z-index: 3;
+}
+.vs span { transform: translateY(4%); }
+.vs[data-knock="true"] { animation: knock 800ms cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes knock {
+  0% { transform: rotate(-8deg) scale(1); }
+  30% { transform: rotate(5deg) scale(1.2); }
+  100% { transform: rotate(-8deg) scale(1); }
+}
+
+/* The record: one lamp per guess, oldest on the left. */
+.rail {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: calc(var(--u) * .34) calc(var(--u) * .6);
+  list-style: none;
+  background: var(--box);
+  border-radius: calc(var(--u) * .5);
+  box-shadow:
+    0 0 0 calc(var(--u) * .08) rgba(243, 239, 226, .45),
+    calc(var(--u) * .16) calc(var(--u) * .22) 0 rgba(0, 0, 0, .5);
+}
+.rail li {
+  width: calc(var(--u) * .46);
+  height: calc(var(--u) * .46);
+  border-radius: 50%;
+  background: var(--lamp-off);
+}
+.rail li.player { background: var(--green-lamp); box-shadow: 0 0 calc(var(--u) * .35) var(--green-lamp); }
+.rail li.opponent { background: var(--red-lamp); box-shadow: 0 0 calc(var(--u) * .35) var(--red-lamp); }
+
+.dim { position: fixed; inset: 0; background: #000; pointer-events: none; z-index: 5; }
+
+.note {
+  position: fixed;
+  left: 2.5vmin;
+  bottom: 1.2vmin;
+  z-index: 6;
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(13px, 1.6vmin, 18px);
+  color: var(--paper);
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash { display: none; }
+  .marquee.chase i, .vs[data-knock="true"] { animation: none; }
+  .lamp::after, .lamp.on::after { transition: none; }
+}
