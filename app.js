@@ -1,8 +1,7 @@
 (() => {
   // Must match KEY in seal.mjs.
   const KEY = 'the-thinking-behind';
-  const demo = new URLSearchParams(location.search).has('demo');
-  const STORE = demo ? 'ttb-modes-demo' : 'ttb-modes';
+  const STORE = window.TTB_STORE_KEY || 'ttb-modes';
   const STEPS = {
     classic: ['Make your call', 'Ask an AI', 'Check the verdict'],
     arcade: ['Guess', 'See the answer'],
@@ -16,25 +15,7 @@
   const done = (animations) => Promise.all(animations.map((a) => a.finished.catch(() => {})));
   const fadeIn = (el, duration = 220, delay = 0) => play(el, [{ opacity: 0 }, { opacity: 1 }], { duration, delay, easing: 'ease-out' });
 
-  const DEMO_SOURCES = [
-    { title: 'A source that documents the decision', url: 'https://example.com/' },
-    { title: 'A second source that confirms or disputes it', url: 'https://example.org/' },
-  ];
-  const DEMO = {
-    classic: Array.from({ length: 12 }, (_, i) => ({
-      thing: `The company or product (demo ${i + 1})`,
-      story: 'The story goes here. It covers only what the company knew at that moment: the situation, the pressure and the options. It stops before the decision, so it never gives the answer.',
-      question: 'The decision you have to make goes here',
-      sources: DEMO_SOURCES,
-    })),
-    arcade: Array.from({ length: 12 }, (_, i) => ({
-      thing: `The topic (demo ${i + 1})`,
-      question: 'The quick question goes here',
-      answer: 'The answer goes here, in one or two sentences, with the reason behind it.',
-      sources: DEMO_SOURCES,
-    })),
-  };
-  const lists = demo ? DEMO : { classic: [], arcade: [], ...window.TTB_SEALED };
+  const lists = { classic: [], arcade: [], ...window.TTB_SEALED };
 
   const $ = (id) => document.getElementById(id);
   const ui = {
@@ -54,7 +35,6 @@
 
   // Decodes one entry only when it is drawn, so the others stay sealed.
   function unseal(mode, index) {
-    if (demo) return DEMO[mode][index];
     const key = new TextEncoder().encode(KEY);
     const bytes = Uint8Array.from(atob(lists[mode][index]), (c) => c.charCodeAt(0));
     return JSON.parse(new TextDecoder().decode(bytes.map((b, i) => b ^ key[i % key.length])));
@@ -122,8 +102,6 @@ Separate information available at the time from later outcomes and explanations.
   }
 
   const state = load();
-  $('demoLink').textContent = demo ? 'Demo content · exit demo' : 'Try the demo';
-  $('demoLink').href = demo ? location.pathname : '?demo';
   for (const mode of ['classic', 'arcade']) {
     const { current } = state[mode];
     if (current && !lists[mode][current.index]) state[mode].current = null;
@@ -177,7 +155,6 @@ Separate information available at the time from later outcomes and explanations.
     if (state.mode === 'classic') parts.push(`${count('closed')} played`);
     else parts.push(`${count('got')} got`, `${count('missed')} missed`);
     parts.push(`${count('rejected')} skipped`);
-    if (demo) parts.push('demo list');
     if (!storageWorks) parts.push('this browser will not keep the record');
     ui.count.textContent = parts.join(', ');
 
@@ -193,7 +170,7 @@ Separate information available at the time from later outcomes and explanations.
     ui.hint.hidden = none;
     ui.empty.hidden = !none;
     const help = document.createElement('span');
-    help.textContent = 'Try the demo from the home screen.';
+    help.textContent = 'Choose another mode from the home screen.';
     const plural = state.mode === 'classic' ? 'journal entries' : 'levels';
     ui.empty.replaceChildren(list().length ? `You finished all ${plural}` : `No ${plural} yet`, help);
     stack(ui.draw, left);

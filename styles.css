@@ -119,8 +119,6 @@ body[data-mode='arcade'] .table::before { display: none; }
 .masthead { text-align: center; }
 .masthead h1 { font: 700 clamp(34px, 8.6vmin, 88px) / 1.04 Rockwell, Georgia, serif; letter-spacing: -.03em; }
 .masthead p { margin-top: .45em; font-size: clamp(16px, 2.6vmin, 24px); font-weight: 500; }
-.demo-link { display: inline-block; margin-top: 10px; color: var(--ink); font-size: 14px; text-underline-offset: 4px; }
-.demo-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .decks { min-height: 0; display: flex; align-items: center; justify-content: center; gap: clamp(30px, 10vw, 150px); }
 .pick {
   display: grid;

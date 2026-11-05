@@ -1,4 +1,4 @@
-// The saved score lives in score.json. K and R add points on top until the next reload.
+// The saved score lives in score.json. K and S add points on top until the next reload.
 const SOURCE = 'score.json'
 const HOLES = 40
 
@@ -209,7 +209,7 @@ function playPoint(side) {
 addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
   const key = e.key.toLowerCase()
-  if (key !== 'k' && key !== 'r') return
+  if (key !== 'k' && key !== 's') return
   const side = key === 'k' ? 'player' : 'opponent'
   state.log += key === 'k' ? 'r' : 'w'
   draw()

@@ -1,12 +1,12 @@
 # The Thinking Behind
 
-A practice tool, and a prop for the videos. It has two modes. It is a plain static page with no dependencies, no build step and no server.
+A practice tool, and a prop for the videos. It has two modes. It is a plain static page with no runtime dependencies. The source works directly; the public build minifies its CSS and JavaScript.
 
 - **Classic:** read a real story that stops before the decision. Write your call and your reason. The page builds a prompt, and you paste it into an AI tool. The prompt asks the AI to read your sources, find additional reliable sources, and compare your reasoning with the evidence. It separates what was known at the time from later outcomes. The AI's reply starts with a verdict and what you missed. Check Right, Partly right or Wrong, add what you missed if you want, and the page makes a clean card to screenshot. The page itself never gives the answer.
 - **Arcade:** a quick question. Lock your guess to see the answer and the sources. Mark if you got it, and the cabinet shows a Right or Wrong screen to screenshot. It can hold trivia that the videos never cover.
 
 ## Use it
-Open `index.html` in Chrome and press `F` for full screen. To try it with demo entries, add `?demo` to the address. Each demo entry says what a real entry holds in that spot.
+Open `index.html` in Chrome and press `F` for full screen. For the local demo, add `?demo` to the address. Demo content and its home-screen link live in the git-ignored `demo.js`; that file is local only.
 
 | Key | What it does | When |
 |---|---|---|
@@ -70,7 +70,19 @@ The screen behind you on camera is in `scoreboard/`. See its README.
 ## GitHub Pages
 The `Deploy The Thinking Behind to GitHub Pages` workflow publishes the app at the site root and the scoreboard at `scoreboard/`. In the repository's Settings → Pages, select **GitHub Actions** as the source. A push to `main` that changes the app, scoreboard or workflow triggers deployment. You can also run the workflow manually from Actions.
 
-The workflow creates an empty public `sealed.js`. Your local `sealed.js` and `entries.json` stay git-ignored and are never copied into the deployment. Use the home screen's demo link, or add `?demo` to the site URL, to play the placeholder entries. Real public entries need a separate reviewed content list. System fonts have fallbacks; Arcade's web fonts are included in the deployment.
+The workflow installs the pinned build dependency with `npm ci` and runs `npm test`. The test builds `_site/` and checks asset references and the public-file allowlist. CSS, JavaScript and font filenames include content hashes. Both pages share the full Bungee Inline font. The scoreboard badge uses a two-letter Bungee subset. Required fonts are preloaded; unused fonts are not preloaded on the home screen. The font subset retains the original letter shapes and spacing. Motion remains unchanged.
+
+The build creates an empty public `sealed.js`. Your local `sealed.js` and `entries.json` stay git-ignored and are never copied into the deployment. The public build excludes `demo.js` and its script tag, so it has no demo content or link. Without a reviewed public content list, each mode shows an empty state. Real public entries need a separate reviewed content list. System fonts have fallbacks; Arcade's web fonts are included in the deployment.
+
+To preview the public build locally (Node.js 22+ and Python 3 required):
+
+```bash
+npm ci
+npm test
+python3 -m http.server 8877 --bind 127.0.0.1 --directory _site
+```
+
+Open `http://127.0.0.1:8877/`, or `http://127.0.0.1:8877/scoreboard/`. After a source edit, run `npm run build` to refresh `_site/`. The build output and `node_modules/` are git-ignored. No deployment occurs when you build or preview locally.
 
 Progress is saved per browser and site address. Progress from a local preview does not transfer to the GitHub Pages address.
 
@@ -96,7 +108,7 @@ require an API key. Run setup again to refresh the graph. The environment,
 Graphify output, generated Codex files and preview state are git-ignored.
 These tools are for development; GitHub Pages still serves the static site.
 
-Start prints the local demo URL and runs the preview in the background, bound to
+Start prints the local preview URL and runs the preview in the background, bound to
 `127.0.0.1`. The default port is 8765; use `PORT=8766 ./start.sh` if it is busy.
 Logs are in `.run/preview.log`. Stop checks the saved process before stopping it;
 it does not stop a server started by another tool.

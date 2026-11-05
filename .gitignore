@@ -6,6 +6,11 @@ entries.json
 # Local development tools, Graphify output, and preview state.
 /.venv/
 /.run/
+/node_modules/
+/_site/
 /graphify-out/
 /.codex/
 /AGENTS.md
+
+# Local demo decks; never deploy or push.
+/demo.js

@@ -1,7 +1,8 @@
 @font-face {
-  font-family: Bungee;
-  src: url("fonts/bungee-latin-400-normal.woff2") format("woff2");
+  font-family: "Bungee Badge";
+  src: url("fonts/bungee-vs-400-normal.woff2") format("woff2");
   font-display: swap;
+  unicode-range: U+0053, U+0056;
 }
 @font-face {
   font-family: "Bungee Inline";
@@ -30,7 +31,7 @@ body { background: #0b0d0e; overflow: hidden; }
   place-items: center;
   overflow: hidden;
   color: var(--paper);
-  font-family: Bungee, Impact, sans-serif;
+  font-family: Arial, sans-serif;
 }
 .stage.idle { cursor: none; }
 
@@ -101,7 +102,7 @@ body { background: #0b0d0e; overflow: hidden; }
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  font-family: "Bungee Inline", Bungee, Impact, sans-serif;
+  font-family: "Bungee Inline", Impact, sans-serif;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
@@ -181,6 +182,7 @@ body { background: #0b0d0e; overflow: hidden; }
 
 /* The badge sits on the seam. */
 .vs {
+  font-family: "Bungee Badge", Impact, sans-serif;
   position: absolute;
   left: 50%;
   top: 58%;

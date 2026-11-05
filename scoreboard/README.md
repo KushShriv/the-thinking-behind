@@ -21,7 +21,7 @@ Edit [score.json](score.json) and save it. Reload the page to load it.
 | Key | What it does |
 |---|---|
 | `K` | Point to Kushaagra, with the bell |
-| `R` | Point to the opponent, with the buzzer |
+| `S` | Point to the opponent, with the buzzer |
 
 Open the page with the old score, start recording, then press the key. These points are not saved, so a reload clears them and returns to `score.json`. After the piece, add the letter to `guesses` to keep the point.
 
@@ -30,7 +30,17 @@ If the file has a mistake, a line in the bottom corner says what failed. Fix the
 To change the colours, edit the tokens at the top of `styles.css`, after the two font blocks.
 
 ## On GitHub Pages
-`.github/workflows/deploy.yml` at the repository root publishes this folder, and only this folder, at `/scoreboard/`. To change the saved score there, edit `score.json` and push. The change appears after GitHub finishes deploying and you reload.
+`.github/workflows/deploy.yml` at the repository root builds the public site and publishes the scoreboard at `/scoreboard/`. The build includes only its runtime files, fonts and favicon. To change the saved score there, edit `score.json` and push. The change appears after GitHub finishes deploying and you reload.
 
 ## Fonts
 Bungee and Bungee Inline are in `fonts/`, under the SIL Open Font License (`fonts/OFL.txt`).
+
+The badge uses `bungee-vs-400-normal.woff2`, a subset of the original Bungee font with only `V` and `S`. Its glyph outlines, advance widths and vertical metrics are unchanged. Names still use the complete Bungee Inline font, so changing a name does not require a new subset. The main app keeps its original full Bungee font.
+
+To regenerate the badge font with [FontTools](https://fonttools.readthedocs.io/en/latest/subset/) (generated with FontTools 4.68.0 and Brotli 1.2.1):
+
+```bash
+pyftsubset scoreboard/fonts/bungee-latin-400-normal.woff2 --text=VS --layout-features='*' --flavor=woff2 --output-file=scoreboard/fonts/bungee-vs-400-normal.woff2
+```
+
+Run this command from the repository root. The generated font is checked in; normal site builds need only the existing Node.js build tool.
