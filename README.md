@@ -6,7 +6,7 @@ A practice tool, and a prop for the videos. It has two modes. It is a plain stat
 - **Arcade:** a quick question. Lock your guess to see the answer and the sources. Mark if you got it, and the cabinet shows a Right or Wrong screen to screenshot. It can hold trivia that the videos never cover.
 
 ## Use it
-Open `index.html` in Chrome and press `F` for full screen. For the local demo, add `?demo` to the address. Demo content and its home-screen link live in the git-ignored `demo.js`; that file is local only.
+Open `index.html` in Chrome and press `F` for full screen. For the local demo, add `?demo` to the address. Demo content lives in the git-ignored `demo.js`; that file is local only and has no home-screen link.
 
 | Key | What it does | When |
 |---|---|---|
